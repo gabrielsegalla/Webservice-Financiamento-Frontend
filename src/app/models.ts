@@ -24,3 +24,8 @@ export class Usuario {
     email: string;
     cpf: string;
 }
+
+export class PipeUser {
+    offset: number;
+    limit: number;
+}

@@ -1,4 +1,4 @@
-import { CalcPrestacao, CalcPrestacaoByUser, Usuario } from './models';
+import { CalcPrestacao, CalcPrestacaoByUser, Usuario, PipeUser } from './models';
 import { Injectable, EventEmitter } from '@angular/core';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import 'rxjs/Rx';
@@ -51,6 +51,11 @@ export class AppService {
       '&taxa_anual=' + user.taxa_anual + '&percentual_entrada=' + user.percentual_entrada,
       options
     ).map(
+      (res) => res.json());
+  }
+
+  public getUsers(pipeUser: PipeUser) {
+    return this.httpClient.get( this.apiUrl + '/usuarios?offset=' + pipeUser.offset + '&limit=' + pipeUser.limit ).map(
       (res) => res.json());
   }
 }

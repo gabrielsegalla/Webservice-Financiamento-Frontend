@@ -1,4 +1,4 @@
-import { CalcPrestacao, CalcPrestacaoByUser, Usuario } from './models';
+import { CalcPrestacao, CalcPrestacaoByUser, Usuario, PipeUser } from './models';
 import { AppService } from './app.service';
 import { Component, OnInit } from '@angular/core';
 
@@ -11,12 +11,17 @@ export class AppComponent implements OnInit{
   title = 'app';
   prestacoes;
   prestacoesByUser;
+  users;
   public prestacao: CalcPrestacao = new CalcPrestacao();
   public prestacaoByUser: CalcPrestacaoByUser = new CalcPrestacaoByUser();
   public user: Usuario = new Usuario();
+  public pipeUser: PipeUser = new PipeUser();
   constructor(private service: AppService) {}
 
   ngOnInit() {
+    this.pipeUser.offset = 0;
+    this.pipeUser.limit = 20;
+    this.getUsers();
   }
 
   getPrestacoes() {
@@ -42,6 +47,13 @@ export class AppComponent implements OnInit{
 
   changeTemFgts() {
     this.user.tem_fgts = !this.user.tem_fgts;
+  }
+
+  getUsers() {
+    this.service.getUsers(this.pipeUser).subscribe(data =>
+        this.users = data,
+        error => console.log(error)
+    );
   }
 
 }
