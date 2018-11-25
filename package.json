@@ -14,10 +14,8 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "^5.2.0",
-    "@angular/cli": "~1.7.2",
     "@angular/common": "^5.2.0",
     "@angular/compiler": "^5.2.0",
-    "@angular/compiler-cli": "^5.2.0",
     "@angular/core": "^5.2.0",
     "@angular/forms": "^5.2.0",
     "@angular/http": "^5.2.0",
@@ -29,11 +27,13 @@
     "path": "^0.12.7",
     "rxjs": "^5.5.6",
     "typescript": "~2.5.3",
-    "zone.js": "^0.8.19"
+    "zone.js": "^0.8.19",
+    "@angular/cli": "^7.0.6",
+    "@angular/compiler-cli": "^5.2.11",
   },
   "devDependencies": {
-    "@angular/cli": "~1.7.2",
-    "@angular/compiler-cli": "^5.2.0",
+    "@angular/cli": "^7.0.6",
+    "@angular/compiler-cli": "^5.2.11",
     "@angular/language-service": "^5.2.0",
     "@types/jasmine": "~2.8.3",
     "@types/jasminewd2": "~2.0.2",
