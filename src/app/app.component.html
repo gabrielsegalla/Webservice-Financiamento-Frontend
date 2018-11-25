@@ -1,20 +1,186 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
-</div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://github.com/angular/angular-cli/wiki">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
 
+  <title>{{ title }}</title>
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+</head>
+
+<body>
+  <div class="container">
+
+    <h1>WebService para Financiamento</h1>
+    <p class="lead">Este sistema é uma avaliação para a matéria de Programação WEB.</p>
+    <p class="lead">Feito por Gabriel Rodrigues Segalla</p>
+
+    <h3>Gerar Parcelas</h3>
+    <p>Retorna uma lista de parcelas, contendo sua data de vencimento e o valor da parcela na data de vencimento utilizando a metodologia SAC.</p>
+    
+    <div class="row">
+      <div style="width: 100%;">
+        <div class="form-group">
+          <label>Valor do Imovel</label>
+          <input type="number" step="0.01" class="form-control"[(ngModel)]="prestacao.valor_imovel" placeholder="Digite o Valor do Imovel">
+        </div>
+        <div class="form-group">
+          <label>Taxa de Juros</label>
+          <input type="number" step="0.01" class="form-control" [(ngModel)]="prestacao.taxa_juros" placeholder="Digite a Taxa de Juros">
+        </div>
+        <div class="form-group">
+          <label>Percentual de Entrada</label>
+          <input type="number" step="0.01" class="form-control" [(ngModel)]="prestacao.percentual_entrada" placeholder="Digite o Percentual de Entrada">
+        </div>
+        <div class="form-group">
+          <label>Quantidade de Parcelas</label>
+          <input type="number" class="form-control" [(ngModel)]="prestacao.qt_parcelas" placeholder="Digite a Quantidade de Parcelas">
+        </div>
+        <button type="submit" class="btn btn-primary" (click)="getPrestacoes()">Calcular</button>
+      </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+          <table class="table" *ngIf="prestacoes">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Amortização</th>
+                  <th scope="col">Juros</th>
+                  <th scope="col">Valor da Prestação</th>
+                  <th scope="col">Saldo Devedor</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let parcela of prestacoes">
+                  <th scope="row">{{parcela.id}}</th>
+                  <td>R$ {{parcela.amortizacao}}</td>
+                  <td>R$ {{parcela.juros}}</td>
+                  <td>R$ {{parcela.prestacao}}</td>
+                  <td *ngIf="parcela.id == 0 ">R$ {{parcela.saldo_total}}</td>
+                  <td *ngIf="parcela.id != 0 ">R$ {{parcela.saldo_devedor}}</td>
+                </tr>
+              </tbody>
+            </table>
+        </div>
+    </div>
+
+    <h3>Gerar Parcelas Lógicas por Usuário</h3>
+    <p>Retorna uma lista de parcelas e um resultado lógico caso o Usuário tem condições para realizar um Financiamento</p>
+    
+    <div class="row">
+        <div style="width: 100%;">
+          <div class="form-group">
+            <label for="id_usuario">ID do usuário</label>
+            <input type="number" class="form-control" [(ngModel)]="prestacaoByUser.id" placeholder="Digite o ID de Usuário">
+          </div>
+          <div class="form-group">
+            <label for="valor_imovel">Valor do Imovel</label>
+            <input type="number" step="0.01" class="form-control" [(ngModel)]="prestacaoByUser.valor_imovel" placeholder="Digite o Valor do Imovel">
+          </div>
+          <div class="form-group">
+            <label for="prazo_financiamento_anos">Prazo de Financiamento (Anos)</label>
+            <input type="number" class="form-control" [(ngModel)]="prestacaoByUser.prazo_financiamento_anos" placeholder="Digite o Prazo de Financiamento">
+          </div>
+          <button type="submit" class="btn btn-primary" (click)="getPrestacoesbyUser()">Calcular</button>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="prestacoesByUser">
+        <div class="col-md-12">
+            <div class="row">
+                <b *ngIf="prestacoesByUser[0].tem_situacao" style="
+                font-size: x-large;
+                line-height: 100px;
+                margin-left: 1%;
+                color: #55ca95;
+            ">Tem possibilidade de parcelamento, o valor maximo é de R$ {{prestacoesByUser[0].valor_maximo_p_parcela}}</b>
+                <b *ngIf="!prestacoesByUser[0].tem_situacao" style="
+                font-size: x-large;
+                line-height: 100px;
+                margin-left: 1%;
+                color: #f98080;
+            ">Não tem possibilidade de parcelamento, o valor maximo é de R$ {{prestacoesByUser[0].valor_maximo_p_parcela}}</b>
+            </div>
+            <table class="table" *ngIf="prestacoesByUser">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Amortização</th>
+                    <th scope="col">Juros</th>
+                    <th scope="col">Valor da Prestação</th>
+                    <th scope="col">Saldo Devedor</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let parcelaUser of prestacoesByUser[0].parcelas">
+                    <th scope="row">{{parcelaUser.id}}</th>
+                    <td>R$ {{parcelaUser.amortizacao}}</td>
+                    <td>R$ {{parcelaUser.juros}}</td>
+                    <td>R$ {{parcelaUser.prestacao}}</td>
+                    <td *ngIf="parcelaUser.id == 0 ">R$ {{parcelaUser.saldo_total}}</td>
+                    <td *ngIf="parcelaUser.id != 0 ">R$ {{parcelaUser.saldo_devedor}}</td>
+                  </tr>
+                </tbody>
+              </table>
+        </div>
+    </div>
+
+    <h3>Salvar Dados do Usuário</h3>
+    <p>Receba na API REST o CPF, Nome Completo, data de nascimento, se tem FGTS e quanto tem no FGTS e armazene esses dados em base de dados, bem como os dados da simulação.</p>
+
+    <div class="row">
+        <div style="width: 100%;">
+            <div class="form-group">
+                <label>Nome Completo</label>
+                <input type="text" class="form-control" [(ngModel)]="user.nome_completo" placeholder="Digite o Nome Completo">
+            </div>
+            <div class="form-group">
+                <label>CPF</label>
+                <input type="text" class="form-control" [(ngModel)]="user.cpf" placeholder="Digite o CPF">
+            </div>
+            <div class="form-group">
+                <label>Salário do usuário</label>
+                <input type="number" step="0.01" class="form-control" [(ngModel)]="user.salario_usuario" placeholder="Digite o Salário do usuário">
+            </div>
+            <div class="form-group">
+                <label>Taxa Anual</label>
+                <input type="number" step="0.01" class="form-control" [(ngModel)]="user.taxa_anual" placeholder="Digite a Taxa Anual">
+            </div>
+            <div class="form-group">
+                <label>Percentual de Entrada</label>
+                <input type="number" step="0.01" class="form-control" [(ngModel)]="user.percentual_entrada" placeholder="Digite o Percentual de Entrada">
+            </div>
+            <div class="form-group">
+                <label>Data de nascimento</label>
+                <input type="date" class="form-control" [(ngModel)]="user.data_nascimento">
+            </div>
+            <div class="form-group">
+                <label>Possui FGTS?</label>
+                <input type="checkbox" (click)="changeTemFgts()" [(ngModel)]="user.tem_fgts">
+            </div>
+            <div class="form-group" *ngIf="user.tem_fgts">
+                <label>Valor do FGTS</label>
+                <input type="number" step="0.01"class="form-control" [(ngModel)]="user.valor_fgts" placeholder="Digite o Valor do FGTS">
+            </div>
+            <div class="form-group">
+                <label>Email do usuário</label>
+                <input type="email" class="form-control" [(ngModel)]="user.email" placeholder="Digite o email">
+            </div>
+      
+          <button type="submit" class="btn btn-primary" (click)="saveUser()">Salvar</button>
+        </div>
+    </div>
+   
+  </div> <!-- /container -->
+
+
+</body>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+</html>
